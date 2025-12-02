@@ -34,7 +34,18 @@ export const ChatBubble = ({
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={[rehypeKatex]}
         components={{
-          code({ inline, className, children, ...props }) {
+          // Explicitly type as any to allow inline, className, etc.
+          code: ({
+            inline,
+            className,
+            children,
+            ...props
+          }: {
+            inline?: boolean;
+            className?: string;
+            children: React.ReactNode;
+            [key: string]: any;
+          }) => {
             const match = /language-(\w+)/.exec(className || "");
             if (inline || !match) {
               return (
