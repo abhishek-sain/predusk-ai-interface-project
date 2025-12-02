@@ -1,16 +1,17 @@
 "use client";
 
-import { ButtonHTMLAttributes, forwardRef } from "react";
-import { motion } from "framer-motion";
+import { forwardRef } from "react";
+import { motion, type HTMLMotionProps } from "framer-motion";
 import clsx from "clsx";
 
 type Variant = "primary" | "outline" | "ghost";
 type Size = "sm" | "md";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+// Use Framer Motion's props for a button element
+type ButtonProps = HTMLMotionProps<"button"> & {
   variant?: Variant;
   size?: Size;
-}
+};
 
 const base =
   "inline-flex items-center justify-center rounded-lg font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed";
