@@ -26,6 +26,7 @@
     "storybook": "^10.1.2"
   },
   "devDependencies": {
+    "@storybook/react": "^10.1.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
