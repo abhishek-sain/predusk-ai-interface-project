@@ -28,54 +28,56 @@ export const ChatBubble = ({
   const isUser = message.role === "user";
   const isSystem = message.role === "system";
 
+  const CodeBlock = ({
+    inline,
+    className,
+    children,
+    ...props
+  }: {
+    inline?: boolean;
+    className?: string;
+    children?: React.ReactNode;
+    [key: string]: any;
+  }) => {
+    const match = /language-(\w+)/.exec(className || "");
+    if (inline || !match) {
+      return (
+        <code
+          className={clsx(
+            "px-1 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-[11px]",
+            className
+          )}
+          {...props}
+        >
+          {children}
+        </code>
+      );
+    }
+    return (
+      <SyntaxHighlighter
+        style={oneDark}
+        language={match[1]}
+        PreTag="div"
+        customStyle={{
+          borderRadius: "0.75rem",
+          fontSize: "0.75rem",
+          padding: "0.75rem",
+        }}
+        {...props}
+      >
+        {String(children).replace(/\n$/, "")}
+      </SyntaxHighlighter>
+    );
+  };
+
   const body =
     !isUser && !isSystem ? (
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={[rehypeKatex]}
         components={{
-          // Explicitly type as any to allow inline, className, etc.
-          code: ({
-            inline,
-            className,
-            children,
-            ...props
-          }: {
-            inline?: boolean;
-            className?: string;
-            children: React.ReactNode;
-            [key: string]: any;
-          }) => {
-            const match = /language-(\w+)/.exec(className || "");
-            if (inline || !match) {
-              return (
-                <code
-                  className={clsx(
-                    "px-1 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-[11px]",
-                    className
-                  )}
-                  {...props}
-                >
-                  {children}
-                </code>
-              );
-            }
-            return (
-              <SyntaxHighlighter
-                style={oneDark}
-                language={match[1]}
-                PreTag="div"
-                customStyle={{
-                  borderRadius: "0.75rem",
-                  fontSize: "0.75rem",
-                  padding: "0.75rem",
-                }}
-                {...props}
-              >
-                {String(children).replace(/\n$/, "")}
-              </SyntaxHighlighter>
-            );
-          },
+          // Cast to any so react-markdown's strict component typing stops complaining
+          code: CodeBlock as any,
         }}
       >
         {message.content}
